@@ -5,8 +5,7 @@ services:
     image: 127.0.0.1:5000/node
     build: .
     depends_on:
-      pgsql:
-        condition: service_healthy
+      - pgsql
     container_name: pis-task-5
     ports:
       - "3002:3002"
