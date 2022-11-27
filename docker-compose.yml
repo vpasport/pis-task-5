@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   node:
+    image: 127.0.0.1:5000/node
     build: .
     depends_on:
       pgsql:
