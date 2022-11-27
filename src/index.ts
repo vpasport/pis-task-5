@@ -1,19 +1,43 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
+import chalk from 'chalk';
 import reqIp from 'request-ip';
+
+import { counterRepository } from './database';
 
 dotenv.config();
 
+import { create } from './database/utils/create';
+import { fill } from './database/utils/fill';
+
+create()
+	.then(() => fill())
+	.catch((err) => {
+		console.error(err);
+	});
+
 const app: Express = express();
 
-let counter = 0;
+app.get('/', async (req: Request, res: Response) => {
+	const counter = await counterRepository.getCounter();
 
-app.get('/', (req: Request, res: Response) => {
-	res.send(counter.toString());
+	if (counter) {
+		res.send(counter.value.toString());
+	} else {
+		res.sendStatus(500);
+	}
 });
-app.get('/stat', (req: Request, res: Response) => {
-	res.send(counter.toString());
-	counter++;
+
+app.get('/stat', async (req: Request, res: Response) => {
+	const counter = await counterRepository.updateCounter(
+		req.headers['user-agent']
+	);
+
+	if (counter) {
+		res.send(counter.value.toString());
+	} else {
+		res.sendStatus(500);
+	}
 });
 
 app.get('/about', (req: Request, res: Response) => {

@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  node:
+    build: .
+    depends_on:
+      pgsql:
+        condition: service_healthy
+    container_name: pis-task-5
+    ports:
+      - "3002:3002"
+    user: root
+    restart: on-failure
+
+  pgsql:
+    container_name: postgres
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 10s
+      retries: 5
+    restart: always
