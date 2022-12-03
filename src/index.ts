@@ -1,6 +1,5 @@
 import express, { Express, Request, Response } from 'express';
 import dotenv from 'dotenv';
-import chalk from 'chalk';
 import reqIp from 'request-ip';
 
 import { counterRepository } from './database';

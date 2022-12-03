@@ -2,15 +2,25 @@ version: "3.8"
 
 services:
   node:
-    image: 127.0.0.1:5000/node
+    image: vpasport/pis-task-9:latest
     build: .
     depends_on:
       - pgsql
     container_name: pis-task-5
+    environment:
+      - DB_HOST=pgsql
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=pis-task-5
     ports:
       - "3002:3002"
     user: root
     restart: on-failure
+    deploy:
+      replicas: 4
+      restart_policy:
+        condition: on-failure
 
   pgsql:
     container_name: postgres

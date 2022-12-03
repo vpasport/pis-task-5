@@ -16,12 +16,18 @@ Open [http://localhost:3002/](http://localhost:3002/) with your browser to see t
 
 SWARM:
 ```bash
+docker build -t pis-task-9 .
+docker image tag pis-task-9 vpasport/pis-task-9:latest 
+docker push vpsaport/pis-task-9:latest
+
 docker swarm init
-docker service create --name registry --publish published=5000,target=5000 registry:2
 
-docker service ls
+# start service
+docker stack deploy -c docker-compose.yml pis-task-9
+# logs
+docker service logs -f pis-task-9_node
 
-docker compose push 
-
-docker stack deploy --compose-file docker-compose.yml node
+# kill
+docker stack rm pis-task-9
+docker swarm leave --force
 ```
